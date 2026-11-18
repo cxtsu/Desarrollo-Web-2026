@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTS Discography Archive</title>
+
+  <!-- Ícono de la pestaña del navegador (Favicon) -->
+  <link rel="icon" type="image/png" href="assets/imgs/icono bts.jpg">
+
+  <!-- Tipografía Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <!-- Framework CSS Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Iconos Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Hoja de estilos personalizada -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- =================================================================== -->
+  <!-- SECCIÓN SEMÁNTICA: ENCABEZADO Y BARRA DE NAVEGACIÓN                 -->
+  <!-- =================================================================== -->
+  <header class="hero-header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent pt-3">
+      <div class="container">
+        <a class="navbar-brand fw-bold tracking-wide d-flex align-items-center gap-2" href="#">
+          <span class="bts-logo-badge">BTS</span>
+          <span>DISCOGRAPHY ARCHIVE</span>
+        </a>
+    
+      </div>
+    </nav>
+
+    <div class="container py-5 text-center text-white">
+      <p class="text-uppercase letter-spacing-2 small mb-2 opacity-75">Bangtan Sonyeondan <3 </p>
+      <h1 class="display-4 fw-bold mb-3 titulo-editorial">Colección Discográfica Oficial</h1>
+      <p class="lead mx-auto mb-0 opacity-90" style="max-width: 680px;">
+        Catálogo interactivo de ediciones físicas, mini álbumes y antologías.
+      </p>
+    </div>
+  </header>
+
+  <!-- =================================================================== -->
+  <!-- SECCIÓN SEMÁNTICA: CONTENIDO PRINCIPAL                              -->
+  <!-- =================================================================== -->
+  <main class="container my-5">
+
+    <!-- Panel de Filtros Dinámicos del DOM -->
+    <section aria-label="Filtros de búsqueda de álbumes" class="filter-panel card border-0 shadow-sm p-4 mb-5">
+      <div class="row g-3 align-items-end">
+        <!-- Búsqueda por texto (título o canción principal) -->
+        <div class="col-12 col-md-5">
+          <label for="buscador-album" class="form-label fw-semibold text-secondary small text-uppercase">
+            <i class="bi bi-search me-1"></i> Buscar álbum o title track
+          </label>
+          <input
+            type="text"
+            id="buscador-album"
+            class="form-control form-control-lg"
+            placeholder=""
+          >
+        </div>
+
+        <!-- Filtro por Era Conceptual (cargado dinámicamente desde la DB) -->
+        <div class="col-12 col-md-4">
+          <label for="filtro-era" class="form-label fw-semibold text-secondary small text-uppercase">
+            <i class="bi bi-disc-fill me-1"></i>Filtrar por Era Conceptual
+          </label>
+          <select id="filtro-era" class="form-select form-select-lg">
+            <option value="todas">Todas las eras conceptuales</option>
+          </select>
+        </div>
+
+        <!-- Botón de reinicio de filtros y contador -->
+        <div class="col-12 col-md-3 d-grid">
+          <button id="btn-limpiar" type="button" class="btn btn-outline-purple btn-lg">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Limpiar filtros
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de estado de resultados -->
+      <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+        <span id="contador-resultados" class="text-muted small fw-medium">
+          Cargando catálogo desde MySQL...
+        </span>
+      
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- CARRUSEL 3D COVERFLOW + REPRODUCTOR DE TITLE TRACKS (.MP3 LOCALES)  -->
+    <!-- =================================================================== -->
+    <section class="coverflow-player-section mb-5" aria-label="Reproductor destacado de Title Tracks">
+      <div class="coverflow-stage" id="coverflow-stage">
+        <!-- Las 5 tarjetas visibles del Coverflow 3D se generan desde script.js -->
+      </div>
+
+      <!-- Barra de control estilo reproductor flotante -->
+      <div class="player-dock mx-auto mt-4">
+        <div class="player-controls">
+          <button type="button" id="btn-prev-track" class="player-icon-btn" title="Álbum anterior">
+            <i class="bi bi-rewind-fill"></i>
+          </button>
+          <button type="button" id="btn-play-pause" class="player-icon-btn play-main-btn" title="Reproducir / Pausar">
+            <i class="bi bi-play-fill" id="icono-play-pause"></i>
+          </button>
+          <button type="button" id="btn-next-track" class="player-icon-btn" title="Siguiente álbum">
+            <i class="bi bi-fast-forward-fill"></i>
+          </button>
+        </div>
+
+        <!-- Miniatura + Título de la canción + Barra de progreso -->
+        <div class="player-now-playing">
+          <img id="player-thumb" src="assets/imgs/1.jpg" alt="Portada actual" class="player-thumb">
+          <div class="player-meta">
+            <div class="d-flex justify-content-between align-items-center">
+              <span id="player-song-title" class="player-song text-truncate">I NEED U</span>
+              <span id="player-time" class="player-time">0:00</span>
+            </div>
+            <span id="player-album-name" class="player-artist text-truncate d-block">The Most Beautiful Moment in Life, Pt. 1</span>
+            <input type="range" id="player-progress" class="player-progress-bar" value="0" min="0" max="100" step="0.1">
+          </div>
+        </div>
+
+       <!-- Control de volumen y ficha -->
+        <div class="player-extras d-none d-md-flex">
+          <button type="button" id="btn-player-info" class="player-icon-btn" title="Ver ficha del álbum">
+            <i class="bi bi-info-circle"></i>
+          </button>
+          <div class="volume-control-group">
+            <button type="button" id="btn-mute" class="player-icon-btn" title="Silenciar / Activar sonido">
+              <i class="bi bi-volume-up-fill" id="icono-volumen"></i>
+            </button>
+            <input
+              type="range"
+              id="player-volume"
+              class="player-volume-bar"
+              min="0"
+              max="1"
+              step="0.01"
+              value="0.8"
+              title="Regular volumen"
+            >
+          </div>
+        </div>
+
+      <!-- Reproductor HTML5 conectado a los archivos locales en assets/audio/ -->
+      <audio id="audio-title-track" preload="metadata"></audio>
+    </section>
+
+    <!-- Contenedor de mensajes de alerta / carga / error de conexión -->
+    <section id="estado-conexion" aria-live="polite" class="mb-4"></section>
+
+    <!-- Grilla dinámica de tarjetas de álbumes -->
+    <section aria-label="Catálogo de álbumes">
+      <div id="contenedor-albumes" class="row g-4">
+        <!-- Las tarjetas <article> se inyectan dinámicamente vía JavaScript -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- MODAL BOOTSTRAP: DETALLE AMPLIADO DEL ÁLBUM                         -->
+  <!-- =================================================================== -->
+  <div class="modal fade" id="modalDetalleAlbum" tabindex="-1" aria-labelledby="modalTituloAlbum" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div id="modal-banner-color" class="p-4 text-white">
+          <span id="modal-era-badge" class="badge bg-dark bg-opacity-50 mb-2">Era</span>
+          <h2 class="h4 fw-bold mb-0" id="modalTituloAlbum">Título del Álbum</h2>
+        </div>
+        <div class="modal-body p-4">
+          <p id="modal-descripcion" class="text-secondary mb-4"></p>
+          <ul class="list-group list-group-flush rounded-3 border">
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="fw-semibold text-muted">Año de lanzamiento:</span>
+              <span id="modal-anio" class="fw-bold"></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="fw-semibold text-muted">Canción principal (Title Track):</span>
+              <span id="modal-cancion" class="fw-bold text-purple"></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="fw-semibold text-muted">Formato:</span>
+              <span id="modal-tipo"></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="fw-semibold text-muted">Precio referencia edición física:</span>
+              <span id="modal-precio" class="fw-bold text-success"></span>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer border-0 pt-0 px-4 pb-4">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- SECCIÓN SEMÁNTICA: PIE DE PÁGINA                                    -->
+  <!-- =================================================================== -->
+  <footer class="footer-bts py-4 mt-5 text-center text-white-50">
+    <div class="container">
+      <p class="mb-1 text-white fw-semibold">BTS DISCOGRAPHY ARCHIVE</p>
+      "Si es chileno, es bueno." — V, BTS (2026)
+      <p class="small mb-0">By cxtsu</p>
+    </div>
+  </footer>
+
+  <!-- Scripts de Bootstrap 5 y Lógica de la Aplicación -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
